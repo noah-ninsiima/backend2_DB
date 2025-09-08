@@ -15,7 +15,7 @@ server.get('/',(req,res)=>{
 server.get('/quotes', async (req, res) => {
   try {
     let quotes = await prisma.quote.findMany({
-      include: { author: true }
+      include: { Author: true }
     })
     res.send(quotes)
   } catch (error) {
