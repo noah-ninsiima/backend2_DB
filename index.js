@@ -3,6 +3,7 @@ const prisma = require('./prisma/prismaClient')
 const quotesRouter = require('./routes/quotesRouter')
 const authRouter = require('./routes/authRouter')
 const verifyToken =require('./utils/authorization')
+require('dotenv').config()
 
 const server = express();
 
@@ -45,7 +46,7 @@ server.post('/authors', async (req, res) => {
 })
 
 //get all qoutes
-const PORT = 4001;
+const PORT = process.env.PORT;
 server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
