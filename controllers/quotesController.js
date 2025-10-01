@@ -2,7 +2,7 @@
 const getAllQuotes = (prisma) => {
   return async (req, res) => {
     try {
-      const quotes = await prisma.quote.findMany(); // or include { Author: true } if you like
+      const quotes = await prisma.quote.findMany();
       res.send(quotes);
     } catch (error) {
       res.send(error);
@@ -11,28 +11,20 @@ const getAllQuotes = (prisma) => {
 };
 
 const createAQuote = (prisma) => {
-  return (req, res) => {
-    let body = '';
-    req.on('data', chunk => (body += chunk));
-    req.on('end', async () => {
-      try {
-        const data = JSON.parse(body); // expects { "text": "...", "authorId": 1 }
-        const newQuote = await prisma.quote.create({
-          data: {
-            text: data.text,
-            authorId: data.authorId, // <-- FIX: correct field name
-          },
-        });
-        res.send({ message: 'Successfully created the quote', newQuote });
-      } catch (error) {
-        res.send(error);
+  return async (req, res) => {
+    try {
+      const { text, authorId } = req.body;     
+      if (!text || !authorId) {
+        return res.status(400).send({ error: 'text and authorId are required' });
       }
-    });
+      const newQuote = await prisma.quote.create({
+        data: { text, authorId }
+      });
+      res.send({ message: 'Successfully created the quote', newQuote });
+    } catch (error) {
+      res.send(error);
+    }
   };
 };
 
-// Use CommonJS exports (since router uses require)
-module.exports = {
-  getAllQuotes,
-  createAQuote,
-};
+module.exports = { getAllQuotes, createAQuote };

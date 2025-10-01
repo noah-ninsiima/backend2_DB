@@ -28,3 +28,9 @@ model Author {
   photo  String
   quotes Quote[]
 }
+model user{
+  id Int @id @default(autoincrement())
+  name String @unique
+  email String @unique
+  password String
+}
